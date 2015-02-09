@@ -66,6 +66,11 @@ void test1()
 #endif
 
 	free(ts);
+	
+	unsigned int k, j;
+	
+	k=0;j=0xfffffffe;
+	printf("%u\n", (k-j));
 }
 
 //TEST(test_list, list_del)
@@ -448,7 +453,7 @@ void init_test_struct(int n, struct test_struct* ts)
     }
 }
 
-int main(int argc, char *argv[])
+void main(int argc, char *argv[])
 {
     //return RUN_ALL_TESTS(argc, argv);
 	test1();
