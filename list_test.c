@@ -25,39 +25,47 @@ void init_test_struct(int n, struct test_struct* ts);
 //TEST(test_list, list_add)
 void test1()
 {
-    struct test_struct* ts = NULL;
-int i;
+	struct test_struct* ts = NULL;
+	int i;
 
-    ts = (struct test_struct*)malloc(NODE * sizeof(struct test_struct));
-    init_test_struct(NODE, ts);
-    
-    LIST_HEAD(head);
-    printf ("Before add node:\n");
-    print_list(&head);
-        
-    printf ("After add node:\n");
-//for(i=0;i<NODE;++i)
- //   list_add(&(ts+i)->list, &head);
+	ts = (struct test_struct*)malloc(NODE * sizeof(struct test_struct));
+	init_test_struct(NODE, ts);
 
-for(i=0;i<NODE;++i)
-    list_add_tail(&(ts+i)->list, &head);
+	LIST_HEAD(head);
+	printf ("Before add node:\n");
+	print_list(&head);
 
-//    print_list(&head);
-struct test_struct* pos;
-struct list_head *hd;
+	printf ("After add node:\n");
+	//for(i=0;i<NODE;++i)
+	//   list_add(&(ts+i)->list, &head);
 
-//    list_for_each_entry(pos, &head, list)
-//	printf("%d\n", pos->num);
-// 1: list point, 2:head
-    list_for_each(hd, &head)
-    {
-	struct test_struct* p;
+	for(i=0;i<NODE;++i)
+		list_add_tail(&(ts+i)->list, &head);
 
-	p = container_of(hd, struct test_struct, list);
-	printf("%d\n", p->num);
-    }
+	//    print_list(&head);
+	struct test_struct* pos;
 
-    free(ts);
+	list_for_each_entry_reverse(pos, &head, list)
+		printf("%d\n", pos->num);
+#if 0
+	struct list_head *hd;
+
+	// 1: list point, 2:head
+	list_for_each(hd, &head)
+	{
+		struct test_struct* p;
+		int *n;
+
+		p = container_of(hd, struct test_struct, list);
+		printf("%d\n", p->num);
+
+		n = &p->num;
+		p = container_of(n, struct test_struct, num);
+		printf("%d\n", p->num);
+	}
+#endif
+
+	free(ts);
 }
 
 //TEST(test_list, list_del)
