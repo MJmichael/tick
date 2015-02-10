@@ -12,6 +12,7 @@ struct kfifo{
 #define min(a, b) ((a) < (b) ? (a) : (b))
 //#define is_power_2
 
+//init kfifo
 struct kfifo* kfifo_init(unsigned char* buf, unsigned int size)
 {
 	struct kfifo *fifo;	
@@ -26,6 +27,7 @@ struct kfifo* kfifo_init(unsigned char* buf, unsigned int size)
 	return fifo;
 }
 
+//alloc kfifo
 struct kfifo* kfifo_alloc(unsigned int size)
 {
 	unsigned char *buf;
@@ -41,17 +43,20 @@ struct kfifo* kfifo_alloc(unsigned int size)
 	return ret;
 }
 
+//release kfifo 
 void kfifo_free(struct kfifo* fifo)
 {
 	free(fifo->buffer);
 	free(fifo);
 }
 
+//kfifo empty
 void kfifo_reset(struct kfifo* fifo)
 {
 	fifo->in = fifo->out = 0;
 }
 
+//return k'fifo len
 unsigned int kfifo_len(struct kfifo* fifo)
 {
 	return fifo->in - fifo->out;
@@ -95,7 +100,7 @@ unsigned int kfifo_out(struct kfifo* fifo, unsigned char* buf, unsigned int len)
 
 	return len;	
 }
-
+//test for k'fifo
 #define FIFO_SIZE 1024
 
 void main(int argc, char** argv)
