@@ -67,10 +67,12 @@ void test1()
 
 	free(ts);
 	
+#if 0
 	unsigned int k, j;
 	
 	k=0;j=0xfffffffe;
 	printf("%u\n", (k-j));
+#endif
 }
 
 //TEST(test_list, list_del)
