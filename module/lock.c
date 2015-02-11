@@ -1,11 +1,11 @@
 #include <linux/list.h>
 #include <linux/slab.h>
 #include <linux/string.h>
-//#include <asm/semaphore.h>
-//#include <asm/errno.h>
 #include <linux/semaphore.h>
 #include <linux/errno.h>
 #include <linux/list.h>
+#include <linux/spinlock.h>
+#include <linux/spinlock_types.h>
 
 #include <linux/module.h>
 
@@ -18,7 +18,8 @@ struct object{
 };
 
 //lock 
-static DEFINE_SEMAPHORE(cache_lock);
+//static DEFINE_SEMAPHORE(cache_lock);
+static DEFINE_SPINLOCK(cache_lock);
 static LIST_HEAD(cache);
 static unsigned int cache_num = 0;
 #define MAX_CACHE_SIZE 10
@@ -72,6 +73,7 @@ static void __cache_add(struct object *obj)
 int cache_add(int id, const char* name)
 {
 	struct object *obj;
+	unsigned long flags;
 
 	if((obj = kmalloc(sizeof(struct object), GFP_KERNEL)) == NULL)
 		return -ENOMEM;
@@ -80,33 +82,44 @@ int cache_add(int id, const char* name)
 	strlcpy(obj->name, name, sizeof(struct object));
 	obj->popularity = 0;
 
-	down(&cache_lock);
+//semaphore --> spin_lock
+//	down(&cache_lock);
+	spin_lock_irqsave(&cache_lock, flags);
 	__cache_add(obj);
-	up(&cache_lock);
+	spin_unlock_irqrestore(&cache_lock, flags);
+//	up(&cache_lock);
 
 	return 0;
 }
 
 void cache_delete(int id)
 {
-	down(&cache_lock);
+	unsigned long flags;
+
+//semaphore --> spin_lock
+//	down(&cache_lock);
+	spin_lock_irqsave(&cache_lock, flags);
 	__cache_del(__cache_find(id));
-	up(&cache_lock);
+	spin_unlock_irqrestore(&cache_lock, flags);
+//	up(&cache_lock);
 }
 
 int cache_find(int id, char *name)
 {
 	struct object *obj;
 	int ret = -ENOENT;
+	unsigned long flags;
 
-	down(&cache_lock);
+//	down(&cache_lock);
+	spin_lock_irqsave(&cache_lock, flags);
 	obj = __cache_find(id);
 
 	if(obj){
 		ret = 0;
 		strcpy(name, obj->name);
 	}
-	up(&cache_lock);
+	spin_unlock_irqrestore(&cache_lock, flags);
+//	up(&cache_lock);
 
 	return ret;
 }
