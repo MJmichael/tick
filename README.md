@@ -12,3 +12,6 @@ just for list reseach
 2015.2.11
 添加lock.c,用于测试内核同步方法
 注意在2.6以后，DECLEAR_MUTEX-->DEFINE_SEPHORE
+
+2015.2.12
+添加lock_ref.c,将内部的object对外开放，别的线程也可以访问；
