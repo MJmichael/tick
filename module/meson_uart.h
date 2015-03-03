@@ -115,7 +115,7 @@ typedef struct UART_STATUS_REG{
 	uint32_t rx_fifo_data_count:7;
 	uint32_t reserved:1;
 	uint32_t tx_fifo_data_count:7;
-	uint32_t reserved:1;
+	uint32_t reserved1:1;
 	uint32_t parity_err:1;
 	uint32_t frame_err:1;
 	uint32_t tx_fifo_werr:1;
@@ -127,7 +127,7 @@ typedef struct UART_STATUS_REG{
 	uint32_t recv_fifo_overflow:1;
 	uint32_t uart_xmit_busy:1;
 	uint32_t uart_recv_busy:1;
-	uint32_t reserved:5;
+	uint32_t reserved2:5;
 }uart_status_reg_t;
 
 typedef struct UART_INTCTL_REG{

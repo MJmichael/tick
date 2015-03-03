@@ -37,7 +37,6 @@
 #include <linux/slab.h>
 #include <mach/io.h>
 #include <mach/uart.h>
-//#include <mach/pinmux.h>
 #include <linux/clk.h>
 #include <linux/amlogic/uart-aml.h>
 
@@ -46,17 +45,15 @@
 
 #include "meson_uart.h"
 
-
 #include <asm/serial.h>
 #include <linux/of.h>
 #include <linux/pinctrl/consumer.h>
 #include <mach/mod_gate.h>
 
 /* UART name and device definitions */
-
 #define MESON_SERIAL_NAME		"ttyS"
-#define MESON_SERIAL_MAJOR	4
-#define MESON_SERIAL_MINOR	64
+#define MESON_SERIAL_MAJOR		4
+#define MESON_SERIAL_MINOR		64
 
 static int meson_uart_console_index =  -1;
 struct console * meson_register_uart_console = NULL;
@@ -73,7 +70,7 @@ struct meson_uart_port {
 	* loaded.
 	*/
 	char 		name[32];
-	int 			baud;
+	int 		baud;
 	int			magic;
 	int			baud_base;
 	int			irq;
@@ -93,13 +90,13 @@ struct meson_uart_port {
 	int			line;
 	int			count;	    /* # of fd on device */
 	int			blocked_open; /* # of blocked opens */
-	long			session; /* Session of opening process */
-	long			pgrp; /* pgrp of opening process */
+	long		session; /* Session of opening process */
+	long		pgrp; /* pgrp of opening process */
 
-	int                  rx_cnt;
-	int                  rx_error;
+	int         rx_cnt;
+	int         rx_error;
 
-	struct mutex	info_mutex;
+	struct mutex info_mutex;
 
 	struct tasklet_struct	tlet;
 	struct work_struct	tqueue;
@@ -918,7 +915,7 @@ static int meson_uart_resume(struct platform_device *pdev)
 	if(mup->bt_ops) {
 		tmp = readl(&mup->uart->mode);
 		writel(tmp & (~(0x1 <<31)), &(mup->uart->mode));
-		printk(KERN_DEBUG "disable Invert the RTS signal %lx \n",mup->uart->mode);
+		printk(KERN_DEBUG "disable Invert the RTS signal %lx \n",*((unsigned long*)&mup->uart->mode));
 	}
 
 	return 0;
@@ -933,7 +930,7 @@ static int meson_uart_suspend(struct platform_device *pdev, pm_message_t state)
 		if(mup->bt_ops->bt_can_sleep()) {
 			tmp = readl(&(mup->uart->mode));
 			writel(tmp | (0x1 << 31), &(mup->uart->mode));
-			printk(KERN_DEBUG "Invert the RTS signal %lx \n",mup->uart->mode);
+			printk(KERN_DEBUG "Invert the RTS signal %lx \n",*((unsigned long*)&mup->uart->mode));
 		}
 		else {
 			printk("bt is busy\n");
