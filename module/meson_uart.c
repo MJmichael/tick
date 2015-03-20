@@ -140,7 +140,6 @@ static void am_uart_stop_tx(struct uart_port *port)
 	struct meson_uart_port * mup = &am_ports[port->line];
 	am_uart_t *uart = mup->uart;
 
-
 	//mutex_lock(&mup->info_mutex);
 	preempt_disable();
 	mode = readl(&uart->mode);
@@ -218,17 +217,14 @@ static void am_uart_set_mctrl(struct uart_port *port, unsigned int mctrl)
 
 static void am_uart_break_ctl(struct uart_port *port, int break_state)
 {
-      return;
+    return;
 }
-
-
 
 #ifdef CONFIG_CONSOLE_POLL
 /*
  * Console polling routines for writing and reading from the uart while
  * in an interrupt or debug context.
  */
-
 static int am_uart_get_poll_char(struct uart_port *port)
 {
 	int rx;
@@ -243,7 +239,6 @@ static int am_uart_get_poll_char(struct uart_port *port)
 	return rx;
 }
 
-
 static void am_uart_put_poll_char(struct uart_port *port,
 			 unsigned char c)
 {
@@ -256,7 +251,6 @@ static void am_uart_put_poll_char(struct uart_port *port,
 
     return;
 }
-
 #endif /* CONFIG_CONSOLE_POLL */
 
 static int am_uart_startup(struct uart_port *port)
@@ -974,8 +968,6 @@ static struct aml_uart_platform  aml_uart_driver_data = {
 };
 
 #define MESON_SERIAL_DRV_DATA ((kernel_ulong_t)&aml_uart_driver_data)
-
-
 static const struct of_device_id meson_uart_dt_match[]={
 	{	.compatible 	= "amlogic,aml_uart",
 		.data		= (void *)MESON_SERIAL_DRV_DATA
@@ -1026,7 +1018,7 @@ static  struct platform_driver meson_uart_platform_driver = {
 	},
 };
 
-/*****************************************************/
+/**********************************************************************************************************************/
 static int __init meson_uart_init(void)
 {
 	int ret;
