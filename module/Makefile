@@ -11,6 +11,7 @@ obj-m+=lock_ref.o
 #obj-m+=meson_uart.o
 obj-m+=kobject.o
 obj-m+=bus.o
+obj-m+=device.o
 
 KERNELDIR:=/lib/modules/$(shell uname -r)/build
 #KERNELDIR:=/home/fwj/amlogic/out/target/product/m201/obj/KERNEL_OBJ

@@ -8,12 +8,28 @@
 #include <linux/init.h>
 
 #include <linux/device.h>
+#include <linux/sysfs.h>
 
 MODULE_LICENSE("Dual BSD/GPL");   //内核license
+static char module_name[64] = "coffe"; 
 
 struct bus_type usb_bus = {
-	.name = "usb-virual",
+	.name = "usb-fwj",
 };
+
+static ssize_t show_bus_name(struct bus_type *bus, char *buf)
+{
+	//'\0' and '\n'
+	return snprintf(buf, strlen(module_name)+2, "%s\n", module_name);
+}
+
+static ssize_t store_bus_name(struct bus_type *bus, const char *buf, size_t count)
+{
+	//'\0' and '\n'
+	return snprintf(module_name, strlen(buf)+2, "%s\n", buf);
+}
+
+static BUS_ATTR(name, 0777, show_bus_name, store_bus_name);
 
 static int __init usb_bus_init(void)
 {
@@ -26,12 +42,19 @@ static int __init usb_bus_init(void)
 		return ret;
 	}
 
+	ret = bus_create_file(&usb_bus, &bus_attr_name);
+	if(ret){
+		printk("usb bus create file failed\n");
+		return ret;
+	}
+
 	printk("usb bus register ok\n");
 	return 0;
 }
 
 static void __exit usb_bus_exit(void)
 {
+	bus_remove_file(&usb_bus, &bus_attr_name);
 	bus_unregister(&usb_bus);
 	printk("usb bus unregsiter\n");
 }

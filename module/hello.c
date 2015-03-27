@@ -4,6 +4,7 @@
 
 #include <linux/init.h>
 #include <linux/module.h>
+#include <linux/slab.h>
 
 MODULE_LICENSE("Dual BSD/GPL");   //内核license
 
@@ -13,6 +14,7 @@ static int hello_init(void)
 	
 	printk(KERN_ALERT "Hello, world\n");
 	
+	pos = (char*)kmalloc(64*sizeof(char), GFP_KERNEL);
 	strcpy(pos, "hello");
 	return 0;
 }
