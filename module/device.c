@@ -60,17 +60,17 @@ static int __init usb_device_init(void)
 	//总线注册，必须检测返回值
 	ret = device_register(&usb_device);
 	if(ret){
-		printk("usb bus register failed\n");
+		printk("usb device register failed\n");
 		return ret;
 	}
 
 	ret = device_create_file(&usb_device, &dev_attr_version);
 	if(ret){
-		printk("usb bus create file failed\n");
+		printk("usb device create file failed\n");
 		return ret;
 	}
 
-	printk("usb bus register ok\n");
+	printk("usb device register ok\n");
 	return 0;
 }
 
@@ -78,7 +78,7 @@ static void __exit usb_device_exit(void)
 {
 	device_remove_file(&usb_device, &dev_attr_version);
 	device_unregister(&usb_device);
-	printk("usb bus unregsiter\n");
+	printk("usb device unregsiter\n");
 }
 
 module_init(usb_device_init);

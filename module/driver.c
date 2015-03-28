@@ -41,17 +41,17 @@ static int __init usb_driver_init(void)
 	//总线注册，必须检测返回值
 	ret = driver_register(&usb_driver);
 	if(ret){
-		printk("usb bus register failed\n");
+		printk("usb driver register failed\n");
 		return ret;
 	}
 
 	ret = driver_create_file(&usb_driver, &driver_attr_version);
 	if(ret){
-		printk("usb bus create file failed\n");
+		printk("usb driver create file failed\n");
 		return ret;
 	}
 
-	printk("usb bus register ok\n");
+	printk("usb driver register ok\n");
 	return 0;
 }
 
@@ -59,7 +59,7 @@ static void __exit usb_driver_exit(void)
 {
 	driver_remove_file(&usb_driver, &driver_attr_version);
 	driver_unregister(&usb_driver);
-	printk("usb bus unregsiter\n");
+	printk("usb driver unregsiter\n");
 }
 
 module_init(usb_driver_init);
