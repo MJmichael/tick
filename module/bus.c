@@ -17,6 +17,9 @@ struct bus_type usb_bus = {
 	.name = "usb-fwj",
 };
 
+/* 单独编译的模块需要导出符号，在别的模块中才可以使用 */
+EXPORT_SYMBOL(usb_bus);
+
 static ssize_t show_bus_name(struct bus_type *bus, char *buf)
 {
 	//'\0' and '\n'

@@ -12,10 +12,12 @@
 
 MODULE_LICENSE("Dual BSD/GPL");   //内核license
 static char module_name[64] = "coffe"; 
-
+extern struct bus_type usb_bus;
+#if 0
 struct bus_type usb_bus = {
 	.name = "usb-fwj",
 };
+#endif
 
 static void usb_dev_release(struct device *dev)
 {
@@ -23,25 +25,33 @@ static void usb_dev_release(struct device *dev)
 }
 
 /* define usb device */
+#if 0
 struct device_type usb_device = {
 	.name = "usb_device",
 //	.bus = &usb_bus;/*指定bus，会在bus生成软链接*/
 	.release = usb_dev_release,
 };
+#endif
 
-ssize_t show_device_name(struct device *dev, struct device_attribute *attr, char *buf)
+struct device usb_device = {
+	.init_name = "usb_device",
+	.bus = &usb_bus,
+	.release = usb_dev_release,
+};
+
+ssize_t show_device_version(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	//'\0' and '\n'
 	return snprintf(buf, strlen(module_name)+2, "%s\n", module_name);
 }
 
-ssize_t store_device_name(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+ssize_t store_device_version(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
 	//'\0' and '\n'
 	return snprintf(module_name, strlen(buf)+2, "%s\n", buf);
 }
 
-static DEVICE_ATTR(version, 0777, show_device_name, store_device_name);
+static DEVICE_ATTR(version, 0777, show_device_version, store_device_version);
 
 static int __init usb_device_init(void)
 {
@@ -54,7 +64,7 @@ static int __init usb_device_init(void)
 		return ret;
 	}
 
-	ret = device_create_file(&usb_device, &dev_attr_version_name);
+	ret = device_create_file(&usb_device, &dev_attr_version);
 	if(ret){
 		printk("usb bus create file failed\n");
 		return ret;
@@ -66,7 +76,7 @@ static int __init usb_device_init(void)
 
 static void __exit usb_device_exit(void)
 {
-	device_remove_file(&usb_device, &dev_attr_version_name);
+	device_remove_file(&usb_device, &dev_attr_version);
 	device_unregister(&usb_device);
 	printk("usb bus unregsiter\n");
 }
