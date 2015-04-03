@@ -34,7 +34,7 @@ struct device_type usb_device = {
 #endif
 
 struct device usb_device = {
-	.init_name = "usb_device",
+	.init_name = "usb_fwj",
 	.bus = &usb_bus,
 	.release = usb_dev_release,
 };

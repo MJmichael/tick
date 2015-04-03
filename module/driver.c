@@ -15,7 +15,7 @@ static char module_name[64] = "coffe";
 extern struct bus_type usb_bus;
 
 struct device_driver usb_driver = {
-	.name = "usb_driver",
+	.name = "usb_fwj",
 	.bus = &usb_bus,
 //	.release = usb_dev_release,
 };
