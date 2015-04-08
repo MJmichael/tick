@@ -10,13 +10,13 @@
 #include <linux/device.h>
 #include <linux/sysfs.h>
 
-//#include <bus.h>
+#include "bus.h"
 
 MODULE_LICENSE("Dual BSD/GPL");   //内核license
 static char module_name[64] = "coffe"; 
 //extern struct bus_type usb_bus;
-extern int usb_device_register(struct device* dev);
-extern void usb_device_unregister(struct device* dev);
+//extern int usb_device_register(struct device* dev);
+//extern void usb_device_unregister(struct device* dev);
 #if 0
 struct bus_type usb_bus = {
 	.name = "usb-fwj",
@@ -36,13 +36,22 @@ struct device_type usb_device_type = {
 };
 
 const struct device_type *type_usb = &usb_device_type;
-#endif
 
 struct device usb_device = {
 	.init_name = "usb_fwj",
 //	.type = type_usb,
 //	.bus = &usb_bus,
 	.release = usb_dev_release,
+};
+#endif
+
+struct usb_device mouse_dev = {
+	.VenderID = 0x1122,
+	.DeviceID = 0x3344,
+	.dev = {
+		.init_name = "usb_fwj",
+		.release = usb_dev_release,
+	},
 };
 
 ssize_t show_device_version(struct device *dev, struct device_attribute *attr, char *buf)
@@ -65,17 +74,19 @@ static int __init usb_device_init(void)
 
 	//总线注册，必须检测返回值
 //	ret = device_register(&usb_device);
-	ret = usb_device_register(&usb_device);
+	ret = usb_device_register(&mouse_dev);
 	if(ret){
 		printk("usb device register failed\n");
 		return ret;
 	}
 
+#if 0
 	ret = device_create_file(&usb_device, &dev_attr_version);
 	if(ret){
 		printk("usb device create file failed\n");
 		return ret;
 	}
+#endif
 
 	printk("usb device register ok\n");
 	return 0;
@@ -83,9 +94,9 @@ static int __init usb_device_init(void)
 
 static void __exit usb_device_exit(void)
 {
-	device_remove_file(&usb_device, &dev_attr_version);
+//	device_remove_file(&usb_device, &dev_attr_version);
 //	device_unregister(&usb_device);
-	usb_device_unregister(&usb_device);
+	usb_device_unregister(&mouse_dev);
 	printk("usb device unregsiter\n");
 }
 

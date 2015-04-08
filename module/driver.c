@@ -10,16 +10,28 @@
 #include <linux/device.h>
 #include <linux/sysfs.h>
 
+#include "bus.h"
+
 MODULE_LICENSE("Dual BSD/GPL");   //内核license
 static char module_name[64] = "coffe"; 
 //extern struct bus_type usb_bus;
-extern int usb_driver_register(struct device_driver* drv);
-extern void usb_driver_unregister(struct device_driver* drv);
+//extern int usb_driver_register(struct device_driver* drv);
+//extern void usb_driver_unregister(struct device_driver* drv);
 
+#if 0
 struct device_driver usb_driver = {
 	.name = "usb_fwj",
 //	.bus = &usb_bus,
 //	.release = usb_dev_release,
+};
+#endif
+
+struct usb_driver mouse_drv = {
+	.VenderID = 0x1122,
+	.DeviceID = 0x3344,
+	.drv = {
+		.name="usb_fwj"
+	},
 };
 
 ssize_t show_driver_version(struct device_driver *dev, char *buf)
@@ -42,17 +54,20 @@ static int __init usb_driver_init(void)
 
 	//总线注册，必须检测返回值
 //	ret = driver_register(&usb_driver);
-	ret = usb_driver_register(&usb_driver);
+//	ret = usb_driver_register(&usb_driver);
+	ret = usb_driver_register(&mouse_drv);
 	if(ret){
 		printk("usb driver register failed\n");
 		return ret;
 	}
 
+#if 0
 	ret = driver_create_file(&usb_driver, &driver_attr_version);
 	if(ret){
 		printk("usb driver create file failed\n");
 		return ret;
 	}
+#endif
 
 	printk("usb driver register ok\n");
 	return 0;
@@ -60,9 +75,10 @@ static int __init usb_driver_init(void)
 
 static void __exit usb_driver_exit(void)
 {
-	driver_remove_file(&usb_driver, &driver_attr_version);
+//	driver_remove_file(&usb_driver, &driver_attr_version);
 //	driver_unregister(&usb_driver);
-	usb_driver_unregister(&usb_driver);
+//	usb_driver_unregister(&usb_driver);
+	usb_driver_unregister(&mouse_drv);
 	printk("usb driver unregsiter\n");
 }
 
