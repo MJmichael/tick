@@ -10,6 +10,8 @@
 #include <linux/device.h>
 #include <linux/sysfs.h>
 
+#include "bus.h"
+
 MODULE_LICENSE("Dual BSD/GPL");   //内核license
 static char module_name[64] = "coffe"; 
 
@@ -17,11 +19,14 @@ static char module_name[64] = "coffe";
 /* match 函数 */
 int usb_bus_match(struct device* dev, struct device_driver *drv)
 {
+	struct usb_device *usb_dev = container_of(dev, struct usb_device, dev);
+	struct usb_driver *usb_drv = container_of(drv, struct usb_driver, drv);
 #if 1
-	if(dev==NULL || drv==NULL)
+	if((usb_dev->VenderID == usb_drv->VenderID)&&(usb_dev->DeviceID == usb_drv->DeviceID))
 	{
-		printk("NULL pointer\n");
-		return -1;
+		printk("match sucess\n");
+	}else{
+		printk("match faild\n");
 	}
 
 	if(!strcmp(dev_name(dev), drv->name))
@@ -44,28 +49,28 @@ struct bus_type usb_bus = {
 /* 单独编译的模块需要导出符号，在别的模块中才可以使用 */
 EXPORT_SYMBOL(usb_bus);
 
-int usb_device_register(struct device *dev)
+int usb_device_register(struct usb_device *usb_dev)
 {
-	dev->bus = &usb_bus;
-	return device_register(dev);
+	usb_dev->dev.bus = &usb_bus;
+	return device_register(&usb_dev->dev);
 }
 
-void usb_device_unregister(struct device* dev)
+void usb_device_unregister(struct usb_device *usb_dev)
 {
-	device_unregister(dev);
+	device_unregister(&usb_dev->dev);
 }
 EXPORT_SYMBOL(usb_device_register);
 EXPORT_SYMBOL(usb_device_unregister);
 
-int usb_driver_register(struct device_driver *drv)
+int usb_driver_register(struct usb_driver *usb_drv)
 {
-	drv->bus = &usb_bus;
-	return driver_register(drv);
+	usb_drv->drv.bus = &usb_bus;
+	return driver_register(&usb_drv->drv);
 }
 
-void usb_driver_unregister(struct device_driver *drv)
+void usb_driver_unregister(struct usb_driver *usb_drv)
 {
-	driver_unregister(drv);
+	driver_unregister(&usb_drv->drv);
 }
 EXPORT_SYMBOL(usb_driver_register);
 EXPORT_SYMBOL(usb_driver_unregister);
