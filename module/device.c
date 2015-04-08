@@ -10,9 +10,13 @@
 #include <linux/device.h>
 #include <linux/sysfs.h>
 
+//#include <bus.h>
+
 MODULE_LICENSE("Dual BSD/GPL");   //内核license
 static char module_name[64] = "coffe"; 
-extern struct bus_type usb_bus;
+//extern struct bus_type usb_bus;
+extern int usb_device_register(struct device* dev);
+extern void usb_device_unregister(struct device* dev);
 #if 0
 struct bus_type usb_bus = {
 	.name = "usb-fwj",
@@ -37,7 +41,7 @@ const struct device_type *type_usb = &usb_device_type;
 struct device usb_device = {
 	.init_name = "usb_fwj",
 //	.type = type_usb,
-	.bus = &usb_bus,
+//	.bus = &usb_bus,
 	.release = usb_dev_release,
 };
 
@@ -60,7 +64,8 @@ static int __init usb_device_init(void)
 	int ret;
 
 	//总线注册，必须检测返回值
-	ret = device_register(&usb_device);
+//	ret = device_register(&usb_device);
+	ret = usb_device_register(&usb_device);
 	if(ret){
 		printk("usb device register failed\n");
 		return ret;
@@ -79,7 +84,8 @@ static int __init usb_device_init(void)
 static void __exit usb_device_exit(void)
 {
 	device_remove_file(&usb_device, &dev_attr_version);
-	device_unregister(&usb_device);
+//	device_unregister(&usb_device);
+	usb_device_unregister(&usb_device);
 	printk("usb device unregsiter\n");
 }
 

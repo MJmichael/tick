@@ -13,6 +13,7 @@
 MODULE_LICENSE("Dual BSD/GPL");   //内核license
 static char module_name[64] = "coffe"; 
 
+
 /* match 函数 */
 int usb_bus_match(struct device* dev, struct device_driver *drv)
 {
@@ -42,6 +43,32 @@ struct bus_type usb_bus = {
 
 /* 单独编译的模块需要导出符号，在别的模块中才可以使用 */
 EXPORT_SYMBOL(usb_bus);
+
+int usb_device_register(struct device *dev)
+{
+	dev->bus = &usb_bus;
+	return device_register(dev);
+}
+
+void usb_device_unregister(struct device* dev)
+{
+	device_unregister(dev);
+}
+EXPORT_SYMBOL(usb_device_register);
+EXPORT_SYMBOL(usb_device_unregister);
+
+int usb_driver_register(struct device_driver *drv)
+{
+	drv->bus = &usb_bus;
+	return driver_register(drv);
+}
+
+void usb_driver_unregister(struct device_driver *drv)
+{
+	driver_unregister(drv);
+}
+EXPORT_SYMBOL(usb_driver_register);
+EXPORT_SYMBOL(usb_driver_unregister);
 
 static ssize_t show_bus_name(struct bus_type *bus, char *buf)
 {
