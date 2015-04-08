@@ -16,19 +16,20 @@ static char module_name[64] = "coffe";
 /* match 函数 */
 int usb_bus_match(struct device* dev, struct device_driver *drv)
 {
-#if 0
+#if 1
 	if(dev==NULL || drv==NULL)
 	{
 		printk("NULL pointer\n");
 		return -1;
 	}
 
-	if(!strcmp(dev->init_name, drv->name))
+	if(!strcmp(dev_name(dev), drv->name))
 		printk("match sucess\n");
 	else
 		printk("match faild\n");
 #endif
 	printk("dev->init_name:%s\n", dev->init_name);
+	printk("dev->name:%s\n", dev_name(dev));
 	printk("drv->name:%s\n", drv->name);
 
 	return 0;

@@ -25,16 +25,18 @@ static void usb_dev_release(struct device *dev)
 }
 
 /* define usb device */
-#if 0
-struct device_type usb_device = {
+#if 0 
+struct device_type usb_device_type = {
 	.name = "usb_device",
-//	.bus = &usb_bus;/*指定bus，会在bus生成软链接*/
 	.release = usb_dev_release,
 };
+
+const struct device_type *type_usb = &usb_device_type;
 #endif
 
 struct device usb_device = {
 	.init_name = "usb_fwj",
+//	.type = type_usb,
 	.bus = &usb_bus,
 	.release = usb_dev_release,
 };
