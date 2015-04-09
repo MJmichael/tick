@@ -13,6 +13,8 @@ obj-m+=kobject.o
 obj-m+=bus.o
 obj-m+=device.o
 obj-m+=driver.o
+obj-m+=platform_driver.o
+obj-m+=platform_device.o
 
 KERNELDIR:=/lib/modules/$(shell uname -r)/build
 #KERNELDIR:=/home/fwj/amlogic/out/target/product/m201/obj/KERNEL_OBJ
