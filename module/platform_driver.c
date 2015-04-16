@@ -61,13 +61,11 @@ static int __init usb_driver_init(void)
 		return ret;
 	}
 
-#if 0
-	ret = driver_create_file(&usb_driver, &driver_attr_version);
+	ret = driver_create_file(&mouse_drv.driver, &driver_attr_version);
 	if(ret){
 		printk("usb driver create file failed\n");
 		return ret;
 	}
-#endif
 
 	printk("usb driver register ok\n");
 	return 0;
@@ -75,7 +73,7 @@ static int __init usb_driver_init(void)
 
 static void __exit usb_driver_exit(void)
 {
-//	driver_remove_file(&usb_driver, &driver_attr_version);
+	driver_remove_file(&mouse_drv.driver, &driver_attr_version);
 //	driver_unregister(&usb_driver);
 //	usb_driver_unregister(&usb_driver);
 //	usb_driver_unregister(&mouse_drv);

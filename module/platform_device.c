@@ -59,13 +59,11 @@ static int __init usb_device_init(void)
 		return ret;
 	}
 
-#if 0
-	ret = device_create_file(&usb_device, &dev_attr_version);
+	ret = device_create_file(&mouse_dev.dev, &dev_attr_version);
 	if(ret){
 		printk("usb device create file failed\n");
 		return ret;
 	}
-#endif
 
 	printk("usb device register ok\n");
 	return 0;
@@ -73,7 +71,7 @@ static int __init usb_device_init(void)
 
 static void __exit usb_device_exit(void)
 {
-//	device_remove_file(&usb_device, &dev_attr_version);
+	device_remove_file(&mouse_dev.dev, &dev_attr_version);
 //	device_unregister(&usb_device);
 //	usb_device_unregister(&mouse_dev);
 	platform_device_unregister(&mouse_dev);
